@@ -1,0 +1,22 @@
+@media all and (max-width: 1100px) {
+    .left {width: 80px;}
+    .left p {font-size: 10px;}
+    .left a {height: auto; line-height: unset; margin: 5px; padding: 5px; font-size: 10px; text-align: center;}
+    .left a:before {display:none;}
+    .selector label:nth-child(2) {border-radius: 10px 0px 0px 0px;}
+    .selector label:nth-child(4) {border-radius: 0px 10px 0px 0px;}
+    .selector label:nth-child(10) {border-radius: 0px 0px 0px 10px;}
+    .selector label:nth-child(12) {border-radius: 0px 0px 10px 0px;}
+    .main {margin: 0px 0px 0px 80px; padding: 5px;}
+}
+@media all and (max-width: 700px) {
+    #background-video {display: none;}
+    .desktop {display: none;}
+    .mobile {display: block;}
+    #footer {padding: 10px; font-size: 12px; background: none;}
+    .form-paragraph {padding: 10px;}
+    .form-paragraph:before {display: none;}
+}
+@media all and (max-width: 400px) {
+    .site {margin-top: 60px;}
+}

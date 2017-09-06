@@ -1,0 +1,8 @@
+name			= Encryption
+description		= Cypher and encryption handling.
+version			= 0.5
+state			= beta
+initfile		= encryption.php
+date			= 20170730
+author			= Witch
+weight			= 100

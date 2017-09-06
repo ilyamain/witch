@@ -1,0 +1,8 @@
+name			= Transactions
+description		= Transaction-handling.
+version			= 0.2
+state			= alpha
+initfile		= transactions.php
+date			= 20170827
+author			= Witch
+weight			= 400
