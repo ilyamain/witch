@@ -9,7 +9,7 @@ date_default_timezone_set('UTC');
 
 // Определяем системные константы (кроме базы данных, она в файле конфигурации)
 // Наименование программы
-define('PROGRAM_NAME', 'PHP-Blockchain');
+define('PROGRAM_NAME', 'Blockchain CMS Witch');
 // В зависимости от ОС, выбирается прямой или обратный слэш для указания пути к файлу
 define('DS', DIRECTORY_SEPARATOR);
 // Все прямые и обратные слэши приводятся к единому значению
