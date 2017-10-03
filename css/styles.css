@@ -165,6 +165,11 @@ input, select, textarea {
     margin: 10px 0px;
     text-align: center;
 }
+.left form {
+    margin: 10px;
+    padding: 10px;
+    border: 3px double #a5a5a5;
+}
 .selector {
     margin: 0px 10px;
     padding: 0px;
@@ -601,4 +606,20 @@ input, select, textarea {
 }
 .reload-button:before {
     background-position: -240px -180px;
+}
+.install-field:before, .uninstall-field:before {
+    content: " ";
+    position: absolute;
+    top: 5px;
+    left: 5px;
+    width: 20px;
+    height: 20px;
+    background-image: url(/images/icons.png);
+    background-size: auto 1100%;
+}
+.install-field:before {
+    background-position: -40px -120px;
+}
+.uninstall-field:before {
+    background-position: -60px -120px;
 }
