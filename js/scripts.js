@@ -33,6 +33,7 @@ $(document).ready(function()
 	});
 	$(document).on('click', '.transaction-form .send-button a', function() {form_send($(this), 'transaction');});
 	$(document).on('click', '.execute-button a', function() {form_send($(this), 'install');});
+	$(document).on('click', '.module-button a', function() {form_send($(this), 'module');});
 
 	$(document).on('change', '.form [name="number"]', function() {fill_passes($(this), 'oldpass'); fill_passes($(this), 'newpass');});
 	$(document).on('change', '.form [name="oldnumber"]', function() {fill_passes($(this), 'oldpass');});
@@ -43,6 +44,7 @@ $(document).ready(function()
 	$(document).on('keydown keypress keyup paste input', '.form [name="newnumber-01"]', function() {fill_passes($(this), 'newpass-01');});
 	$(document).on('keydown keypress keyup paste input', '.form [name="newnumber-02"]', function() {fill_passes($(this), 'newpass-02');});
 
+	$(document).on('keydown keypress keyup paste input', '.form [name="fee"]', function () {float_mask (this)});
 	$(document).on('keydown keypress keyup paste input', '.form [name="newdenom"]', function () {float_mask (this)});
 	$(document).on('keydown keypress keyup paste input', '.form [name="newdenom-01"]', function () {float_mask (this)});
 	$(document).on('keydown keypress keyup paste input', '.form [name="newdenom-02"]', function () {float_mask (this)});
