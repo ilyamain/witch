@@ -19,128 +19,127 @@ $demo_text .= 'В итоге получится так, что банкноты 
 $demo_text .= 'Поэтому в демонстрационной версии отключена функция добавления намерений.';
 ?>
 
-<?$sql = 'SELECT * FROM bill_bills';
-$bills = q($sql);
-if (!empty($bills)) 
+<?
+$modules = new cModules;
+if ($modules->is_enabled('transactions')) 
 {
-	$arBills = array();
-	while ($iBills = $bills->fetch_assoc()) 
+	$sql = 'SELECT * FROM bill_bills';
+	$bills = q($sql);
+	if (!empty($bills)) 
 	{
-		array_push($arBills, $iBills);
-	}?>
-	<p>Таблица банкнот</p>
-	<div class="desktop">
-		<table>
-			<tr>
-				<td>Банкнота</td>
-				<td>Подпись</td>
-				<td>Алгоритм</td>
-				<td>Номинал</td>
-				<td>Timestamp</td>
-			</tr>
+		$arBills = array();
+		while ($iBills = $bills->fetch_assoc()) array_push($arBills, $iBills);?>
+		<p>Таблица банкнот</p>
+		<div class="desktop">
+			<table>
+				<tr>
+					<td>Банкнота</td>
+					<td>Подпись</td>
+					<td>Алгоритм</td>
+					<td>Номинал</td>
+					<td>Timestamp</td>
+				</tr>
+				<?if (!empty($arBills)) 
+				{
+					foreach ($arBills as $iBills) 
+					{?>
+						<tr>
+							<td><?=$iBills['number'];?></td>
+							<td><?=$iBills['sign'];?></td>
+							<td><?=$iBills['algorithm'];?></td>
+							<td class="right-text"><?=to_cent($iBills['denomination']);?></td>
+							<td><?=date('d.m.Y H:i:s', $iBills['timestamp']);?></td>
+						</tr>
+					<?}
+				}
+				else 
+				{?>
+					<tr><td colspan="5">Банкноты не найдены</td></tr>
+				<?}?>
+			</table>
+		</div>
+		<div class="mobile">
 			<?if (!empty($arBills)) 
 			{
 				foreach ($arBills as $iBills) 
 				{?>
-					<tr>
-						<td><?=$iBills['number'];?></td>
-						<td><?=$iBills['sign'];?></td>
-						<td><?=$iBills['algorithm'];?></td>
-						<td class="right-text"><?=$iBills['denomination'];?></td>
-						<td><?=date('d.m.Y H:i:s', $iBills['timestamp']);?></td>
-					</tr>
+					<div class="mobile-table-row">
+						<div class="mobile-table-item">Банкнота: <?=$iBills['number'];?></div>
+						<div class="mobile-table-item">Подпись: <?=$iBills['sign'];?></div>
+						<div class="mobile-table-item">Алгоритм: <?=$iBills['algorithm'];?></div>
+						<div class="mobile-table-item">Номинал: <?=to_cent($iBills['denomination']);?></div>
+						<div class="mobile-table-item">Timestamp: <?=date('d.m.Y H:i:s', $iBills['timestamp']);?></div>
+					</div>
 				<?}
 			}
 			else 
 			{?>
-				<tr><td colspan="5">Банкноты не найдены</td></tr>
+				<div class="mobile-table-row">Банкноты не найдены</div>
 			<?}?>
-		</table>
-	</div>
-	<div class="mobile">
-		<?if (!empty($arBills)) 
-		{
-			foreach ($arBills as $iBills) 
-			{?>
-				<div class="mobile-table-row">
-					<div class="mobile-table-item">Банкнота: <?=$iBills['number'];?></div>
-					<div class="mobile-table-item">Подпись: <?=$iBills['sign'];?></div>
-					<div class="mobile-table-item">Алгоритм: <?=$iBills['algorithm'];?></div>
-					<div class="mobile-table-item">Номинал: <?=$iBills['denomination'];?></div>
-					<div class="mobile-table-item">Timestamp: <?=date('d.m.Y H:i:s', $iBills['timestamp']);?></div>
-				</div>
-			<?}
-		}
-		else 
-		{?>
-			<div class="mobile-table-row">Банкноты не найдены</div>
-		<?}?>
-	</div>
-<?}
-else 
-{?>
-	<div>Произошла внутренняя ошибка сервера</div>
-<?}?>
+		</div>
+	<?}
+	else 
+	{?>
+		<div>Произошла внутренняя ошибка сервера</div>
+	<?}?>
 
-<?$sql = 'SELECT * FROM intentions';
-$intention = q($sql);
-if (!empty($intention)) 
-{
-	$arIntentions = array();
-	while ($iIntentions = $intention->fetch_assoc()) 
+	<?$sql = 'SELECT * FROM intentions';
+	$intention = q($sql);
+	if (!empty($intention)) 
 	{
-		array_push($arIntentions, $iIntentions);
-	}?>
-	<p>Таблица намерений к банкнотам</p>
-	<div class="desktop">
-		<table>
-			<tr>
-				<td>Объект</td>
-				<td>Публичный ключ</td>
-				<td>Намерение</td>
-			</tr>
+		$arIntentions = array();
+		while ($iIntentions = $intention->fetch_assoc()) array_push($arIntentions, $iIntentions);?>
+		<p>Таблица намерений к банкнотам</p>
+		<div class="desktop">
+			<table>
+				<tr>
+					<td>Объект</td>
+					<td>Публичный ключ</td>
+					<td>Намерение</td>
+				</tr>
+				<?if (!empty($arIntentions)) 
+				{
+					foreach ($arIntentions as $iIntentions) 
+					{?>
+						<tr>
+							<td><?=$iIntentions['goal'];?></td>
+							<td><?=$iIntentions['pubkey'];?></td>
+							<td><?=$iIntentions['intention'];?></td>
+						</tr>
+					<?}
+				}
+				else 
+				{?>
+					<tr><td colspan="3">Намерения не опубликованы</td></tr>
+					<?if (DEMO) {?>
+						<tr><td colspan="3" class="left-text word-text"><?=$demo_text;?></td></tr>
+					<?}?>
+				<?}?>
+			</table>
+		</div>
+		<div class="mobile">
 			<?if (!empty($arIntentions)) 
 			{
 				foreach ($arIntentions as $iIntentions) 
 				{?>
-					<tr>
-						<td><?=$iIntentions['goal'];?></td>
-						<td><?=$iIntentions['pubkey'];?></td>
-						<td><?=$iIntentions['intention'];?></td>
-					</tr>
+					<div class="mobile-table-row">
+						<div class="mobile-table-item">Объект: <?=$iIntentions['goal'];?></div>
+						<div class="mobile-table-item">Публичный ключ: <?=$iIntentions['pubkey'];?></div>
+						<div class="mobile-table-item">Намерение: <?=$iIntentions['intention'];?></div>
+					</div>
 				<?}
 			}
 			else 
 			{?>
-				<tr><td colspan="3">Намерения не опубликованы</td></tr>
+				<div class="mobile-table-row">Намерения не опубликованы</div>
 				<?if (DEMO) {?>
-					<tr><td colspan="3" class="left-text word-text"><?=$demo_text;?></td></tr>
+					<div class="mobile-table-row"><?=$demo_text;?></div>
 				<?}?>
 			<?}?>
-		</table>
-	</div>
-	<div class="mobile">
-		<?if (!empty($arIntentions)) 
-		{
-			foreach ($arIntentions as $iIntentions) 
-			{?>
-				<div class="mobile-table-row">
-					<div class="mobile-table-item">Объект: <?=$iIntentions['goal'];?></div>
-					<div class="mobile-table-item">Публичный ключ: <?=$iIntentions['pubkey'];?></div>
-					<div class="mobile-table-item">Намерение: <?=$iIntentions['intention'];?></div>
-				</div>
-			<?}
-		}
-		else 
-		{?>
-			<div class="mobile-table-row">Намерения не опубликованы</div>
-			<?if (DEMO) {?>
-				<div class="mobile-table-row"><?=$demo_text;?></div>
-			<?}?>
-		<?}?>
-	</div>
-<?}
-else 
-{?>
-	<div>Произошла внутренняя ошибка сервера</div>
-<?}?>
+		</div>
+	<?}
+	else 
+	{?>
+		<div>Произошла внутренняя ошибка сервера</div>
+	<?}
+}?>

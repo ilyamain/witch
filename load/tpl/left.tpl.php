@@ -21,4 +21,21 @@
 	<a class="bu-link">Объединить банкноты</a>
 	<a class="bs-link">Разделить банкноты</a>
 	<a class="br-link">Перемешать банкноты</a>
+	<?if (!DEMO) {
+		$modules_list .= '<option disabled>Выберите модуль</option>';
+		$modules = new cModules;
+		foreach ($modules->list_full as $module) $modules_list .= '<option value="'.$module['id'].'">'.$module['name'].'</option>';?>
+		<p>Установка/удаление модуля</p>
+		<form>
+			<div class="form-field select-field install-field requires">
+				<select name="module-name"><?=$modules_list;?></select>
+			</div>
+			<div class="form-field checkbox-field notime-field">
+				<input name="uninstall" type="checkbox" id="flag-uninstall">
+				<label for="flag-uninstall">Удалить</label>
+			</div>
+			<div class="form-error"></div>
+			<div class="form-field module-button send-button"><a>Выполнить</a></div>
+		</form>
+	<?}?>
 </div>
