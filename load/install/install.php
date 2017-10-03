@@ -47,7 +47,7 @@ class cInstall
 		$wrong_items = false;
 		if ($this->demo) 
 		{
-			console_line('Установка демо-версии', 5);
+			console_line('Установка демо-версии', 5, 'attract');
 			if (!$this->db_test()) $wrong_items = true;
 		}
 		else
@@ -78,8 +78,8 @@ class cInstall
 		$db = new mysqli($this->host, $this->user, $this->pass);
 		if ($db->connect_error) 
 		{
-			console_line('Невозможно подключиться к серверу баз данных: '.$db->connect_error, 5);
-			console_line(PROGRAM_NAME.': невозможно установить.', 5);
+			console_line('Невозможно подключиться к серверу баз данных: '.$db->connect_error, 5, 'error');
+			console_line(PROGRAM_NAME.': невозможно установить.', 5, 'error');
 			console_line('<a href="/" class="install-item return-item">Вернуться на главную</a>', 5);
 			$result = false;
 		}
@@ -89,7 +89,7 @@ class cInstall
 			$db->query($sql);
 			if ($db->error) 
 			{
-				console_line('Ошибка при создании базы данных: '.$db->error, 5);
+				console_line('Ошибка при создании базы данных: '.$db->error, 5, 'error');
 				$this->db_delete();
 				$result = false;
 			}
@@ -147,7 +147,7 @@ class cInstall
 		$db = new mysqli($this->host, $this->user, $this->pass, $this->name);
 		if ($db->connect_error) 
 		{
-			console_line('Невозможно подключиться к базе данных: '.$db->connect_error, 5);
+			console_line('Невозможно подключиться к базе данных: '.$db->connect_error, 5, 'error');
 			return false;
 		}
 		else 
@@ -189,7 +189,7 @@ class cInstall
 										$row_values .= '(';
 										foreach ($arRow as $iRow) 
 										{
-											if ($iRow =='NULL') $row_values .= $iRow.','; else $row_values .= "'".$iRow."',";
+											if ($iRow =='NULL') $row_values .= $iRow.','; else $row_values .= '\''.$iRow.'\',';
 										}
 										$row_values = substr ($row_values, 0, -1).'),';
 									}
@@ -198,7 +198,7 @@ class cInstall
 									$db->query($sql);
 									if ($db->error) 
 									{
-										console_line('Ошибка при заполнении таблицы: '.$db->error, 5);
+										console_line('Ошибка при заполнении таблицы: '.$db->error, 5, 'error');
 										$this->db_delete();
 										return false;
 									}
@@ -207,7 +207,7 @@ class cInstall
 						}
 						else 
 						{
-							console_line('Ошибка при создании базы данных', 5);
+							console_line('Ошибка при создании базы данных', 5, 'error');
 							$this->db_delete();
 							return false;
 						}
@@ -215,14 +215,14 @@ class cInstall
 				}
 				else 
 				{
-					console_line('Ошибка при создании базы данных', 5);
+					console_line('Ошибка при создании базы данных', 5, 'error');
 					$this->db_delete();
 					return false;
 				}
 			}
 			else 
 			{
-				console_line('Ошибка при создании базы данных', 5);
+				console_line('Ошибка при создании базы данных', 5, 'error');
 				$this->db_delete();
 				return false;
 			}
@@ -263,14 +263,15 @@ class cInstall
 
 	private function config_create () 
 	{
-		$file_content = "<?\n";
-		$file_content .= "if (!defined('PROGRAM_NAME')) die(); // Защита от прямого вызова скрипта\n";
-		$file_content .= "define('DB_HOST', '".$this->host."');\n";
-		$file_content .= "define('DB_USER', '".$this->user."');\n";
-		$file_content .= "define('DB_PASS', '".$this->pass."');\n";
-		$file_content .= "define('DB_NAME', '".$this->name."');\n";
-		$file_content .= "define('DEMO', ".($this->demo ? 'true' : 'false').");\n";
-		$file_content .= '?'.'>';
+		$file_content = '<?'.PHP_EOL;
+		$file_content .= 'if (!defined(\'PROGRAM_NAME\')) die(); // Защита от прямого вызова скрипта'.PHP_EOL;
+		$file_content .= 'define(\'DB_HOST\', \''.$this->host.'\');'.PHP_EOL;
+		$file_content .= 'define(\'DB_USER\', \''.$this->user.'\');'.PHP_EOL;
+		$file_content .= 'define(\'DB_PASS\', \''.$this->pass.'\');'.PHP_EOL;
+		$file_content .= 'define(\'DB_NAME\', \''.$this->name.'\');'.PHP_EOL;
+		$file_content .= 'define(\'INSTALLED\', PROGRAM_NAME);'.PHP_EOL;
+		$file_content .= 'define(\'DEMO\', '.($this->demo ? 'true' : 'false').');'.PHP_EOL;
+		$file_content .= '?>';
 		file_put_contents($this->config_file, $file_content);
 	}
 	
