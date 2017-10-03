@@ -1,6 +1,6 @@
 name			= Database
 description		= Database-handling.
-version			= 0.5
+version			= 0.52
 state			= beta
 initfile		= db.php
 date			= 20170730

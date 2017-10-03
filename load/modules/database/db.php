@@ -37,12 +37,101 @@ function q ($sql)
 	}
 }
 
-// Вспомогательный класс для выполнения специализированных запросов к базе данных в транзакциях.
-// Используется для ведения локального учета допустимости той или иной транзакции.
+// Вспомогательный класс для выполнения специализированных запросов к базе данных.
 $base = new cBase;
 
 class cBase 
 {
+	// Добавление таблицы в локальную базу данных
+	public function add_tables ($arTables) 
+	{
+		if ((!empty($arTables))&&(is_array($arTables))) 
+		{
+			foreach ($arTables as $table_name => $iTables) 
+			{
+				// Создаем таблицы базы данных
+				$table_exist = q('SHOW TABLES LIKE \''.$table_name.'\'');
+				if ($table_exist->num_rows==0) 
+				{
+					console_line('Создаем таблицу: '.$table_name, 1);
+					if ((!empty($iTables))&&(is_array($iTables))) 
+					{
+						$sql = 'CREATE TABLE IF NOT EXISTS '.$table_name.' (';
+						$row_names = '';
+						foreach ($iTables as $row_name => $row_attributes) 
+						{
+							if ((!empty($row_name))&&(!empty($row_attributes))&&(!is_array($row_attributes))) $sql .= $row_name.' '.$row_attributes.', ';
+							if ((!empty($row_name))&&(!empty($row_attributes))&&(!is_array($row_attributes))&&($row_name!='id')) $row_names .= $row_name.', ';
+						}
+						$row_names = substr ($row_names, 0, -2);
+						$sql = substr ($sql, 0, -2).');';
+						q($sql);
+						// Добавляем строки
+						if ((!empty($iTables['table_rows']))&&(is_array($iTables['table_rows']))) 
+						{
+							$sql = '';
+							$row_values = '';
+							foreach ($iTables['table_rows'] as $arRow) 
+							{
+								$row_values .= '(';
+								foreach ($arRow as $iRow) 
+								{
+									if ($iRow =='NULL') $row_values .= $iRow.','; else $row_values .= '\''.$iRow.'\',';
+								}
+								$row_values = substr ($row_values, 0, -1).'),';
+							}
+							$row_values = substr ($row_values, 0, -1);
+							$sql = 'INSERT INTO '.$table_name.' ('.$row_names.') VALUES '.$row_values;
+							q($sql);
+						}
+					}
+					else 
+					{
+						console_line('Невозможно прочитать формат таблиц', 1);
+						return false;
+					}
+				}
+				else 
+				{
+					console_line('Таблица уже существует', 1);
+					return false;
+				}
+			}
+		}
+		else 
+		{
+			console_line('Невозможно прочитать формат таблиц', 1);
+			return false;
+		}
+	}
+
+	// Удаление таблицы из локальной базы данных
+	public function del_tables ($arTables) 
+	{
+		if ((!empty($arTables))&&(is_array($arTables))) 
+		{
+			foreach ($arTables as $table_name => $iTables) 
+			{
+				console_line('Удаляем: '.$table_name, 1);
+				if ((!empty($iTables))&&(is_array($iTables))) 
+				{
+					$sql = 'DROP TABLE IF EXISTS '.$table_name.';';
+					q($sql);
+				}
+				else 
+				{
+					console_line('Невозможно прочитать формат таблиц', 1);
+					return false;
+				}
+			}
+		}
+		else 
+		{
+			console_line('Невозможно прочитать формат таблиц', 1);
+			return false;
+		}
+	}
+
 	// Извлечение записи о банкноте форка BILL (BILL get row)
 	public function bill_get_row ($number)
 	{
@@ -77,9 +166,10 @@ class cBase
 			}
 		}
 	}
+
 	// Изменение владельца банкноты для форка BILL (BILL change owner)
 	// Выполняется через замену подписи, алгоритма шифрования и таймштампа.
-	public function bill_change_owner ($number, $sign, $algorithm, $timestamp)
+	public function bill_change_owner ($number, $sign, $algorithm, $timestamp, $fee)
 	{
 		if ((!is_string($number))||(empty($number))||(!is_string($sign))||(empty($sign))||(!is_string($algorithm))||(empty($algorithm))||(!is_timestamp($timestamp))) 
 		{
@@ -88,16 +178,27 @@ class cBase
 		}
 		else 
 		{
-			if (!empty($this->bill_get_row($number))) 
+			$bill = $this->bill_get_row($number);
+			if (!empty($bill)) 
 			{
-				$sql =	'UPDATE bill_bills SET '
-						.'sign = \''.$sign.'\''
-						.', algorithm = \''.$algorithm.'\''
-						.', timestamp = \''.$timestamp.'\''
-						.' WHERE number = \''.$number.'\';';
-				q($sql);
-				console_line('<b>'.$number.':</b> пароль банкноты обновлен.', 1);
-				return true;
+				$denomination = to_cent($bill['denomination']-$fee);
+				if ($denomination>0) 
+				{
+					$sql =	'UPDATE bill_bills SET '
+							.'sign = \''.$sign.'\''
+							.', algorithm = \''.$algorithm.'\''
+							.', timestamp = \''.$timestamp.'\''
+							.', denomination = \''.$denomination.'\''
+							.' WHERE number = \''.$number.'\';';
+					q($sql);
+					console_line('<b>'.$number.':</b> пароль банкноты обновлен.', 1);
+					return true;
+				}
+				else 
+				{
+					console_line('<b>'.$number.':</b> банкнота не может быть обновлена.', 1, 'error');
+					return false;
+				}
 			}
 			else 
 			{
@@ -106,6 +207,7 @@ class cBase
 			}
 		}
 	}
+
 	// Удаление банкноты в форке BILL. (BILL remove bill)
 	// В самих транзакциях проводится одновременно с созданием другой банкноты (или группы банкнот). 
 	// Например, при объединении банкнот или их разделении.
@@ -133,13 +235,14 @@ class cBase
 			}
 		}
 	}
+
 	// Создание банкноты в форке BILL. (BILL create bill)
 	// В самих транзакциях проводится одновременно с удалением другой банкноты (или группы банкнот). 
 	// Например, при объединении банкнот или их разделении.
 	// За сохранение суммы номиналов отвечает алгоритм обработки транзакции
 	public function bill_create_bill ($number, $sign, $algorithm, $denomination, $timestamp)
 	{
-		if ((!is_string($number))||(empty($number))||(!is_string($sign))||(empty($sign))||(!is_string($algorithm))||(empty($algorithm))||($denomination<0)||(empty($denomination))||(!is_timestamp($timestamp))) 
+		if ((!is_string($number))||(empty($number))||(!is_string($sign))||(empty($sign))||(!is_string($algorithm))||(empty($algorithm))||($denomination<=0)||(!is_denomination($denomination))||(empty($denomination))||(!is_timestamp($timestamp))) 
 		{
 			console_line('Ошибочный формат обращения к базе данных.', 1, 'error');
 			return false;
@@ -165,6 +268,7 @@ class cBase
 			}
 		}
 	}
+
 	// Извлечение записи о намерениях
 	public function get_intentions ($goal)
 	{
@@ -202,6 +306,7 @@ class cBase
 			}
 		}
 	}
+
 	// Добавление записи о намерениях для цели
 	// Вся обработка намерений происходит в транзакциях и подмодуле намерения
 	public function add_intention ($goal, $pubkey, $intention)
@@ -219,6 +324,7 @@ class cBase
 			return true;
 		}
 	}
+
 	// Очистка записей о намерениях для цели
 	// Вся обработка намерений происходит в транзакциях и подмодуле намерения
 	public function empty_intentions ($goal)
