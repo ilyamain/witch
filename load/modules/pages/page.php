@@ -29,7 +29,7 @@ class cPages
 	
 	public function cPages () 
 	{
-		$this->url = trim(substr($_SERVER["REDIRECT_URL"], 1, -1));
+		$this->url = trim(substr($_SERVER['REDIRECT_URL'], 1, -1));
 		$this->arg = explode('/', $this->url);
 		$this->tpl_folder = SCRIPTS.'tpl'.DS;
 		$this->get_default();
