@@ -5,12 +5,12 @@ if (!defined('PROGRAM_NAME')) die(); // Защита от прямого выз�
 $inactive_form = false;
 if (version_compare(PHP_VERSION, '7.0.0') >= 0) 
 {
-	console_line('Установка '.PROGRAM_NAME.' на версию PHP '.PHP_VERSION.' возможна', 5, 'success');
+	console_line('Установка '.PROGRAM_NAME.' на версию PHP '.PHP_VERSION.' возможна.', 5, 'success');
 }
 else
 {
 	$inactive_form = true;
-	console_line('Установка '.PROGRAM_NAME.' возможна на версии PHP 7.0.0 и выше', 5, 'error');
+	console_line('Установка '.PROGRAM_NAME.' возможна на версии PHP 7.0.0 и выше.', 5, 'error');
 }
 $uninstall_caption = '';
 $uninstall_caption .= '<p>При удалении программы '.PROGRAM_NAME.' будут удалены:</p>';

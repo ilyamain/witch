@@ -73,6 +73,9 @@ else
 			<input name="notime" type="checkbox" id="bco-notime">
 			<label for="bco-notime">Не фиксировать время</label>
 		</div>
+		<div class="form-field input-field denom-field requires">
+			<input name="fee" type="text" placeholder="Комиссионные">
+		</div>
 		<div class="form-error"></div>
 		<div class="form-field send-button"><a>Отправить</a></div>
 	</form>
