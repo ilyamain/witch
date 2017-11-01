@@ -1,7 +1,7 @@
 <?
 if (!defined('PROGRAM_NAME')) die(); // Защита от прямого вызова скрипта
 // q - query. Выполнение SQL запроса к локальной базе данных
-function q ($sql) 
+function q ($sql)
 {
 	console_line('Подключение к базе данных...', 0);
 	$db = new mysqli(DB_HOST, DB_USER, DB_PASS, DB_NAME);
@@ -43,7 +43,7 @@ $base = new cBase;
 class cBase 
 {
 	// Добавление таблицы в локальную базу данных
-	public function add_tables ($arTables) 
+	public function add_tables ($arTables)
 	{
 		if ((!empty($arTables))&&(is_array($arTables))) 
 		{
@@ -106,7 +106,7 @@ class cBase
 	}
 
 	// Удаление таблицы из локальной базы данных
-	public function del_tables ($arTables) 
+	public function del_tables ($arTables)
 	{
 		if ((!empty($arTables))&&(is_array($arTables))) 
 		{
@@ -130,6 +130,23 @@ class cBase
 			console_line('Невозможно прочитать формат таблиц', 1);
 			return false;
 		}
+	}
+
+	// Получение локальных констант (new cBase())->local_core('miner_name')
+	public function local_core ($parameter)
+	{
+		$output = '';
+		if ((is_string($parameter))&&(!empty($parameter))) 
+		{
+			$arResult = array();
+			$constants = q('SELECT * FROM local_core WHERE parameter=\''.$parameter.'\'');
+			if (!empty($constants)) 
+			{
+				$arResult = $constants->fetch_assoc();
+				if (!empty($arResult)) $output = $arResult['value'];
+			}
+		}
+		return $output;
 	}
 
 	// Извлечение записи о банкноте форка BILL (BILL get row)
@@ -284,10 +301,7 @@ class cBase
 			$intentions = q($sql);
 			if (!empty($intentions)) 
 			{
-				while ($iIntentions = $intentions->fetch_assoc()) 
-				{
-					array_push($arIntentions, $iIntentions);
-				}
+				while ($iIntentions = $intentions->fetch_assoc()) array_push($arIntentions, $iIntentions);
 				if (!empty($arIntentions)) 
 				{
 					console_line('<b>'.$goal.':</b> намерения получены.', 1);

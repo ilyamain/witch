@@ -6,12 +6,12 @@ if (is_file(way(__DIR__.DS.'module.dbtables.php'))) require_once(way(__DIR__.DS.
 $file_content = '<?'.PHP_EOL;
 $file_content .= 'if (!defined(\'PROGRAM_NAME\')) die(); // Защита от прямого вызова скрипта'.PHP_EOL;
 $file_content .= 'define(\'BLOCKS_DIR\', way(__DIR__.DS.\'blocks\'.DS));'.PHP_EOL;
-$file_content .= '// Тестовые данные. Будут пересчитаны'.PHP_EOL;
-$file_content .= 'define(\'ISSUE_MULTIPLIER\', 50);'.PHP_EOL;
-$file_content .= 'define(\'REDUCTION\', 0.999999333333333);'.PHP_EOL;
-$file_content .= '// Сумма прогрессии составит 75.000.000, Последний блок с ненулевой эмиссией 27.631.011'.PHP_EOL;
-$file_content .= 'define(\'ISSUE_CONST\', 1);'.PHP_EOL;
-$file_content .= 'define(\'MIN_TIME\', 1200);'.PHP_EOL;
+$file_content .= 'define(\'ISSUE_MULTIPLIER\', 30.230920611119);'.PHP_EOL;
+$file_content .= 'define(\'REDUCTION\', 0.999994066784307);'.PHP_EOL;
+$file_content .= 'define(\'ISSUE_CONST\', 19);'.PHP_EOL;
+$file_content .= '// В блоке 3.679.200 (приблизительно через 140 лет с момента запуска) будет в постоянной'.PHP_EOL;
+$file_content .= '// и переменной составляющих в сумме эмитировано около 75.000.000 у.е.'.PHP_EOL;
+$file_content .= 'define(\'BLOCK_TIME\', 1200);'.PHP_EOL;
 $file_content .= 'define(\'SUM_QUEST\', 100);'.PHP_EOL;
 $file_content .= 'define(\'NUM_QUEST\', 10);'.PHP_EOL;
 $file_content .= 'define(\'MIN_QUEST\', 5);'.PHP_EOL;
@@ -19,7 +19,7 @@ $file_content .= 'define(\'MAX_QUEST\', 15);'.PHP_EOL;
 $file_content .= '?>';
 $base = new cBase;
 
-if ($mode=='install')
+if ($mode=='install') 
 {
 	if (!is_file(way(__DIR__.DS.'module.config.php'))) 
 	{
@@ -34,7 +34,7 @@ if ($mode=='install')
 	}
 }
 
-if ($mode=='uninstall')
+if ($mode=='uninstall') 
 {
 	if (is_file(way(__DIR__.DS.'module.config.php'))) 
 	{

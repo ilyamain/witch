@@ -27,7 +27,7 @@ $install_db = array
 	),
 );
 
-// тестовые локальные данные. Сменятся после разработки админки CMS
-array_push ($install_db['tables']['local_core']['table_rows'], ['foo','505221025f9701f8a05cc22cbafeec897598b2924a9d665cbc10f0073d66da20']);
-array_push ($install_db['tables']['local_core']['table_rows'], ['bar','0e2787dc12b16df10d5ac03c6262b0a6dd7ab11941eb6658c32a6c5f9eb3ee12']);
+array_push ($install_db['tables']['local_core']['table_rows'], ['miner_name','witch']);
+array_push ($install_db['tables']['local_core']['table_rows'], ['miners_connect','15']);
+array_push ($install_db['tables']['local_core']['table_rows'], ['uncommited_blocks','5']);
 ?>

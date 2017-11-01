@@ -3,14 +3,14 @@ $(document).ready(function()
 	$('a[href^="#"], a[href^="."]').click(function()
 	{
 		var myblock_element = $(this).attr('href');
-		if ($(myblock_element).length != 0)
+		if ($(myblock_element).length != 0) 
 		{
-			$('html, body').animate({ scrollTop: $(myblock_element).offset().top-50 }, 500);
+			$('html, body').animate({scrollTop: $(myblock_element).offset().top-50}, 500);
 		}
 		return false;
 	});
 	
-	$('#background-video').YTPlayer
+	$('#111background-video').YTPlayer
 	(
 		{
 			videoId: '-sF9Iu7glT4',
@@ -57,14 +57,14 @@ function fill_passes (caller, goal_field)
 
 function float_mask (caller)
 {
-	while (($(caller).val().split('.').length-1)>1)
+	while (($(caller).val().split('.').length-1)>1) 
 	{
 		$(caller).val($(caller).val().slice(0, -1));
-		if (($(caller).val().split('.').length-1)>1)
+		if (($(caller).val().split('.').length-1)>1) 
 		{
 			continue;
 		}
-		else
+		else 
 		{
 			return false;
 		}
@@ -74,16 +74,16 @@ function float_mask (caller)
 	var int_num_allow = 12;
 	var float_num_allow = 8;
 	var iof = $(caller).val().indexOf('.');
-	if (iof!=-1)
+	if (iof!=-1) 
 	{
-		if ($(caller).val().substring(0, iof).length>int_num_allow)
+		if ($(caller).val().substring(0, iof).length>int_num_allow) 
 		{
 			$(caller).val('');
 			$(caller).attr('placeholder', 'invalid number');
 		}
 		$(caller).val($(caller).val().substring(0, iof+float_num_allow+1));
 	}
-	else
+	else 
 	{
 		$(caller).val($(caller).val().substring(0, int_num_allow));
 	}
@@ -112,18 +112,18 @@ function form_fill (formid, message)
 	var file = '/ajax/form.'+formid+'.php';
 	var page = window.location.pathname;
 	var txt = message||'';
-	if (!is_empty(formid))
+	if (!is_empty(formid)) 
 	{
 		form_open();
 		$('.form').attr('formid', formid);
 		$.ajaxSetup({cache: false});
-		$.post(file, {message: txt}).done(function(data)
+		$.post(file, {message: txt}).done(function(data) 
 		{
 			$('.form').html(data);
 			$('.form').removeClass('loading');
 		});
 	}
-	else
+	else 
 	{
 		form_open();
 		$('.form').attr('formid', 'message');
@@ -135,7 +135,7 @@ function form_fill (formid, message)
 function form_send (caller, send_type)
 {
 	var file = '/ajax/send.'+send_type+'.php';
-	if (!is_empty(caller))
+	if (!is_empty(caller)) 
 	{
 		var requires = $(caller).closest('form').find('.requires input');
 		var fields = $(caller).closest('form').find('input, select, textarea');
@@ -147,25 +147,25 @@ function form_send (caller, send_type)
 		$(caller).closest('form').find('.form-error').html('');
 		$(caller).closest('form').find('.form-error').removeClass('active');
 		$(caller).closest('form').find('.requires').removeClass('unfilled');
-		$.each(requires, function()
+		$.each(requires, function() 
 		{
-			if (is_empty($(this).val()))
+			if (is_empty($(this).val())) 
 			{
 				$(this).closest('.requires').addClass('unfilled');
 				form_error = true;
 			}
 		});
-		if (form_error)
+		if (form_error) 
 		{
 			$(caller).closest('form').find('.form-error').html('Заполнены не все обязательные поля');
 			$(caller).closest('form').find('.form-error').addClass('active');
 		}
-		else
+		else 
 		{
 // Загрузка параметров
-			$(fields).each(function()
+			$(fields).each(function() 
 			{
-				if (((!$(this).is('[type="radio"]'))&&(!$(this).is('[type="checkbox"]')))||($(this).prop('checked')))
+				if (((!$(this).is('[type="radio"]'))&&(!$(this).is('[type="checkbox"]')))||($(this).prop('checked'))) 
 				{
 					params[this.name] = $(this).val();
 				}
@@ -173,17 +173,17 @@ function form_send (caller, send_type)
 			$('.form').html('');
 			$('.form').addClass('loading');
 			$.ajaxSetup({cache: false});
-			$.post(file, {p: params}).done(function(data)
+			$.post(file, {p: params}).done(function(data) 
 			{
-				$.post('/ajax/get.body.php').done(function(body)
+				$.post('/ajax/get.body.php').done(function(body) 
 				{
 					$('#console').prepend(data);
-					if (!is_install)
+					if (!is_install) 
 					{
 						$('.page-body').html(body);
 						form_close();
 					}
-					else
+					else 
 					{
 						$('.form').removeClass('loading');
 						$('.form-bg').addClass('inactive');
@@ -193,17 +193,17 @@ function form_send (caller, send_type)
 			});
 		}
 	}
-	else
+	else 
 	{
 		$('.form').html('');
 		$('.form').addClass('loading');
 		$.ajaxSetup({cache: false});
-		$.post(file).done(function(data)
+		$.post(file).done(function(data) 
 		{
-			$.post('/ajax/get.body.php').done(function(body)
+			$.post('/ajax/get.body.php').done(function(body) 
 			{
 				$('#console').prepend(data);
-				if (!is_install)
+				if (!is_install) 
 				{
 					$('.page-body').html(body);
 					form_close();
@@ -225,15 +225,15 @@ function form_send (caller, send_type)
 // Обновление консоли и страницы
 function page_update ()
 {
-	$.get('/ajax/get.console.php').done(function(console)
+	$.get('/ajax/get.console.php').done(function(console) 
 	{
 		$('#console').prepend(console);
 	});
-	$.get('/ajax/get.body.php').done(function(body)
+	$.get('/ajax/get.body.php').done(function(body) 
 	{
 		$('.page-body').html(body);
 	});
-	$.get('/ajax/get.menu.php').done(function(menu)
+	$.get('/ajax/get.menu.php').done(function(menu) 
 	{
 		$('.menu').html(menu);
 	});
@@ -241,11 +241,11 @@ function page_update ()
 // Проверка пустое ли значение
 function is_empty (a)
 {
-	if ((a == undefined)||(a == '')||(a == null)||(a == 0))
+	if ((a == undefined)||(a == '')||(a == null)||(a == 0)) 
 	{
 		return true;
 	}
-	else
+	else 
 	{
 		return false;
 	}

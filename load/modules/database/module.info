@@ -1,8 +1,8 @@
 name			= Database
 description		= Database-handling.
-version			= 0.52
+version			= 0.5
 state			= beta
 initfile		= db.php
-date			= 20170730
+date			= 20171101
 author			= Witch
 weight			= 200

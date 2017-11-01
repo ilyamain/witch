@@ -11,23 +11,32 @@ class cEncrypt
 	public $sign_proper;
 	public $sign;
 	public $score = 0;
-	
+
+	// Загрузка экземпляра. Возможные значения ключей:
+	// $bill_example['number']
+	// $bill_example['key']
+	// $bill_example['algorithm']
+	// $bill_example['denomination']
+	// $bill_example['timestamp']
+	// $bill_example['entity']
+	// $bill_example['entity_encrypted'] = false
 	public function cEncrypt ($bill_example)
 	{
 		$this->bill_example = $bill_example;
 		$this->test();
 	}
-	
+
+	// Проверка алгоритма шифрования, публичного ключа и подписи
 	public function test ()
 	{
-		$algorithm = $this->bill_example['algorithm'];
-		if (method_exists($this, $algorithm))
+		$algorithm = 'crypt_'.$this->bill_example['algorithm'];
+		if (method_exists($this, $algorithm)) 
 		{
 			$this->algorithm     = true;
 			$this->pubkey        = $this->$algorithm($this->bill_example, true);
 			$this->sign          = $this->$algorithm($this->bill_example);
 		}
-		else
+		else 
 		{
 			$this->algorithm     = false;
 			$this->pubkey_proper = false;
@@ -36,75 +45,22 @@ class cEncrypt
 			$this->sign          = '';
 		}
 	}
-	private function s ($input, $return_pubkey = false) // Simple. Однократное хэширование SHA-256
+
+	// Anti-rainbow. Для защиты от радужных таблиц.
+	private function crypt_ar ($input, $return_pubkey = false)
 	{
-		$this->score = 100;
-		if (!empty($input['key']))
+		$this->score = 50;
+		if (!empty($input['key'])) 
 		{
-//			$pubkey = $input['key']; // Для тестирования. Чтобы видеть пароли.
-			$pubkey = hash('sha256', $input['key']); // Для рабочей версии
+			$pubkey = hash('sha256', $input['key'].$input['number'].$input['timestamp'].$input['algorithm'].to_cent($input['denomination']));
 			$this->pubkey_proper = ($input['pubkey']==$pubkey) ? true : false;
 		}
-		else
-		{
-			$pubkey = $input['pubkey'];
-			$this->pubkey_proper = false;
-		}
-		$sign = hash('sha256', $pubkey);
-		$this->sign_proper = ($input['sign']==$sign) ? true : false;
-		return $return_pubkey ? $pubkey : $sign;
-	}
-	private function t ($input, $return_pubkey = false) // Twice. Двукратное хэширование SHA-256
-	{
-		$this->score = 200;
-		if (!empty($input['key']))
-		{
-//			$pubkey = $input['key']; // Для тестирования. Чтобы видеть пароли.
-			$pubkey = hash('sha256', hash('sha256', $input['key'])); // Для рабочей версии
-			$this->pubkey_proper = ($input['pubkey']==$pubkey) ? true : false;
-		}
-		else
-		{
-			$pubkey = $input['pubkey'];
-			$this->pubkey_proper = false;
-		}
-		$sign = hash('sha256', hash('sha256', $pubkey));
-		$this->sign_proper = ($input['sign']==$sign) ? true : false;
-		return $return_pubkey ? $pubkey : $sign;
-	}
-	private function ar ($input, $return_pubkey = false) // Anti-rainbow. Для защиты от радужных таблиц.
-	{
-		$this->score = 500;
-		if (!empty($input['key']))
-		{
-//			$pubkey = $input['key']; // Для тестирования. Чтобы видеть пароли.
-			$pubkey = hash('sha256', $input['key'].$input['number'].$input['timestamp'].$input['algorithm'].to_cent($input['denomination'])); // Для рабочей версии
-			$this->pubkey_proper = ($input['pubkey']==$pubkey) ? true : false;
-		}
-		else
+		else 
 		{
 			$pubkey = $input['pubkey'];
 			$this->pubkey_proper = false;
 		}
 		$sign = hash('sha256', $pubkey.$input['number'].$input['timestamp'].$input['algorithm'].to_cent($input['denomination']));
-		$this->sign_proper = ($input['sign']==$sign) ? true : false;
-		return $return_pubkey ? $pubkey : $sign;
-	}
-	private function l ($input, $return_pubkey = false) // Подпись Лампорта.
-	{
-		$this->score = 1000;
-		// !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! в разработке
-		if (!empty($input['key']))
-		{
-			$pubkey = $input['key']; // в разработке. Сложный алгоритм.
-			$this->pubkey_proper = ($input['pubkey']==$pubkey) ? true : false;
-		}
-		else
-		{
-			$pubkey = $input['pubkey'];
-			$this->pubkey_proper = false;
-		}
-		$sign = 'В разработке';
 		$this->sign_proper = ($input['sign']==$sign) ? true : false;
 		return $return_pubkey ? $pubkey : $sign;
 	}

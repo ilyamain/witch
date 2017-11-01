@@ -9,7 +9,17 @@ class cTransactions
 	// Смена владельца банкноты (BILL change owner)
 	public function bill_change_owner ($number, $old_key, $new_sign, $new_algorithm, $new_timestamp, $fee, $compile = false)
 	{
-		if ((!is_string($number))||(!is_string($old_key))||(!is_string($new_sign))||(!is_string($new_algorithm))||(!is_timestamp($new_timestamp))||(!is_denomination($fee))) 
+		$transaction_entity = array
+		(
+			$number, 
+			$old_key, 
+			$new_sign, 
+			$new_algorithm, 
+			$new_timestamp, 
+			$fee, 
+		);
+		$transaction_json = transaction_code('bco', $transaction_entity);
+		if ((!is_string($number))||(!is_string($old_key))||(!is_alphabet($new_sign))||(!is_alphabet($new_algorithm))||(!is_timestamp($new_timestamp))||(!is_denomination($fee))) 
 		{
 			console_line('Невозможно прочитать транзакцию. Неправильный формат.', 2, 'error');
 			return false;
@@ -30,7 +40,8 @@ class cTransactions
 					'algorithm' => $old['algorithm'],
 					'denomination' => to_cent($old['denomination']),
 					'timestamp' => $old['timestamp'],
-					'sign'=>$old['sign'],
+					'entity' => $transaction_json,
+					'sign' => $old['sign'],
 				);
 				if ((new cEncrypt($bill_example))->sign_proper) 
 				{
@@ -66,22 +77,14 @@ class cTransactions
 				}
 				// Проверка намерений.
 				$arIntentions = $base->get_intentions($number);
-				if (empty($arIntentions))
+				if (empty($arIntentions)) 
 				{
 					console_line('Обременяющие намерения на банкноте отсутствуют.', 2);
 				}
-				else
+				else 
 				{
 					$current = array();
-					$current['args'] = array
-					(
-						$number, 
-						$old_key, 
-						$new_sign, 
-						$new_algorithm, 
-						$new_timestamp,
-						$fee,
-					);
+					$current['args'] = $transaction_entity;
 					$current['example'] = array
 					(
 						'number' => $number,
@@ -89,6 +92,7 @@ class cTransactions
 						'algorithm' => $old['algorithm'],
 						'denomination' => to_cent($old['denomination']),
 						'timestamp' => $old['timestamp'],
+						'entity' => $transaction_json,
 					);
 					$current['intention'] = transaction_code('bco', $current['args'], $current['example']);
 					$current['pubkey'] = (new cEncrypt($current['example']))->pubkey;
@@ -158,7 +162,17 @@ class cTransactions
 	// k - Пароль к каждой соединяемой банкноте
 	public function bill_unite ($arBills, $number, $sign, $algorithm, $timestamp, $fee, $compile = false)
 	{
-		if ((!is_array($arBills))||(!is_string($number))||(!is_string($sign))||(!is_string($algorithm))||(!is_timestamp($timestamp))||(!is_denomination($fee))) 
+		$transaction_entity = array
+		(
+			$arBills, 
+			$number, 
+			$sign, 
+			$algorithm, 
+			$timestamp, 
+			$fee, 
+		);
+		$transaction_json = transaction_code('bu', $transaction_entity);
+		if ((!is_array($arBills))||(!is_alphabet($number))||(!is_alphabet($sign))||(!is_alphabet($algorithm))||(!is_timestamp($timestamp))||(!is_denomination($fee))) 
 		{
 			console_line('Невозможно прочитать транзакцию. Неправильный формат.', 2, 'error');
 			return false;
@@ -185,7 +199,8 @@ class cTransactions
 						'algorithm' => $old['algorithm'], 
 						'denomination' => to_cent($old['denomination']),
 						'timestamp' => $old['timestamp'],
-						'sign'=>$old['sign'],
+						'entity' => $transaction_json,
+						'sign' => $old['sign'],
 					);
 					if ((new cEncrypt($bill_example))->sign_proper) 
 					{
@@ -212,22 +227,14 @@ class cTransactions
 					}
 					// Проверка намерений.
 					$arIntentions = $base->get_intentions($iBills['n']);
-					if (empty($arIntentions))
+					if (empty($arIntentions)) 
 					{
 						console_line('Обременяющие намерения на банкноте отсутствуют.', 2);
 					}
-					else
+					else 
 					{
 						$current = array();
-						$current['args'] = array
-						(
-							$arBills, 
-							$number, 
-							$sign, 
-							$algorithm, 
-							$timestamp,
-							$fee,
-						);
+						$current['args'] = $transaction_entity;
 						$current['example'] = array
 						(
 							'number' => $iBills['n'], 
@@ -235,6 +242,7 @@ class cTransactions
 							'algorithm' => $old['algorithm'],
 							'denomination' => to_cent($old['denomination']),
 							'timestamp' => $old['timestamp'],
+							'entity' => $transaction_json,
 						);
 						$current['intention'] = transaction_code('bu', $current['args'], $current['example']);
 						$current['pubkey'] = (new cEncrypt($current['example']))->pubkey;
@@ -343,6 +351,15 @@ class cTransactions
 	// s - Подпись каждой новой банкноты
 	public function bill_split ($old_number, $old_key, $arBills, $timestamp, $fee, $compile = false)
 	{
+		$transaction_entity = array
+		(
+			$old_number, 
+			$old_key, 
+			$arBills, 
+			$timestamp, 
+			$fee, 
+		);
+		$transaction_json = transaction_code('bs', $transaction_entity);
 		if ((!is_string($old_number))||(!is_string($old_key))||(!is_array($arBills))||(!is_timestamp($timestamp))||(!is_denomination($fee))) 
 		{
 			console_line('Невозможно прочитать транзакцию. Неправильный формат.', 2, 'error');
@@ -367,7 +384,8 @@ class cTransactions
 					'algorithm' => $old['algorithm'],
 					'denomination' => to_cent($old['denomination']),
 					'timestamp' => $old['timestamp'],
-					'sign'=>$old['sign'],
+					'entity' => $transaction_json,
+					'sign' => $old['sign'],
 				);
 				if ((new cEncrypt($bill_example))->sign_proper) 
 				{
@@ -392,21 +410,14 @@ class cTransactions
 				}
 				// Проверка намерений.
 				$arIntentions = $base->get_intentions($old_number);
-				if (empty($arIntentions))
+				if (empty($arIntentions)) 
 				{
 					console_line('Обременяющие намерения на банкноте отсутствуют.', 2);
 				}
-				else
+				else 
 				{
 					$current = array();
-					$current['args'] = array
-					(
-						$old_number, 
-						$old_key, 
-						$arBills, 
-						$timestamp,
-						$fee,
-					);
+					$current['args'] = $transaction_entity;
 					$current['example'] = array
 					(
 						'number' => $old_number,
@@ -414,6 +425,7 @@ class cTransactions
 						'algorithm' => $old['algorithm'],
 						'denomination' => to_cent($old['denomination']),
 						'timestamp' => $old['timestamp'],
+						'entity' => $transaction_json,
 					);
 					$current['intention'] = transaction_code('bs', $current['args'], $current['example']);
 					$current['pubkey'] = (new cEncrypt($current['example']))->pubkey;
@@ -446,6 +458,16 @@ class cTransactions
 			// Проверка новых банкнот
 			foreach ($arBills as $iBills) 
 			{
+				if ((!is_alphabet($iBills['n']))||(!is_alphabet($iBills['s']))||(!is_alphabet($iBills['a']))) 
+				{
+					console_line('Недопустимый формат банкноты.', 2, 'error');
+					$wrong_items = true;
+					return false;
+				}
+				else 
+				{
+					console_line('Подходящий формат банкноты.', 2);
+				}
 				if ((float_equals($iBills['d'], 0))||($iBills['d']<0)) 
 				{
 					console_line('Недопустимый номинал банкноты.', 2, 'error');
@@ -543,6 +565,14 @@ class cTransactions
 	// $arNew[$key]['s'] - Подпись каждой новой банкноты
 	public function bill_resort ($arOld, $arNew, $timestamp, $fee, $compile = false)
 	{
+		$transaction_entity = array
+		(
+			$arOld, 
+			$arNew, 
+			$timestamp, 
+			$fee, 
+		);
+		$transaction_json = transaction_code('br', $transaction_entity);
 		if ((!is_array($arOld))||(!is_array($arNew))||(!is_timestamp($timestamp))||(!is_denomination($fee))) 
 		{
 			console_line('Невозможно прочитать транзакцию. Неправильный формат.', 2, 'error');
@@ -572,7 +602,8 @@ class cTransactions
 						'algorithm' => $old['algorithm'],
 						'denomination' => to_cent($old['denomination']),
 						'timestamp' => $old['timestamp'],
-						'sign'=>$old['sign'],
+						'entity' => $transaction_json,
+						'sign' => $old['sign'],
 					);
 					if ((new cEncrypt($bill_example))->sign_proper) 
 					{
@@ -599,20 +630,14 @@ class cTransactions
 					}
 					// Проверка намерений.
 					$arIntentions = $base->get_intentions($iOld['n']);
-					if (empty($arIntentions))
+					if (empty($arIntentions)) 
 					{
 						console_line('Обременяющие намерения на банкноте отсутствуют.', 2);
 					}
-					else
+					else 
 					{
 						$current = array();
-						$current['args'] = array
-						(
-							$arOld, 
-							$arNew, 
-							$timestamp,
-							$fee,
-						);
+						$current['args'] = $transaction_entity;
 						$current['example'] = array
 						(
 							'number' => $iOld['n'], 
@@ -620,6 +645,7 @@ class cTransactions
 							'algorithm' => $old['algorithm'],
 							'denomination' => to_cent($old['denomination']),
 							'timestamp' => $old['timestamp'],
+							'entity' => $transaction_json,
 						);
 						$current['intention'] = transaction_code('br', $current['args'], $current['example']);
 						$current['pubkey'] = (new cEncrypt($current['example']))->pubkey;
@@ -653,6 +679,16 @@ class cTransactions
 			// Проверка новых банкнот
 			foreach ($arNew as $iNew) 
 			{
+				if ((!is_alphabet($iNew['n']))||(!is_alphabet($iNew['s']))||(!is_alphabet($iNew['a']))) 
+				{
+					console_line('Недопустимый формат банкноты.', 2, 'error');
+					$wrong_items = true;
+					return false;
+				}
+				else 
+				{
+					console_line('Подходящий формат банкноты.', 2);
+				}
 				if ((float_equals($iNew['d'], 0))||($iNew['d']<0)) 
 				{
 					console_line('Недопустимый номинал банкноты.', 2, 'error');

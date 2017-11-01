@@ -1,8 +1,8 @@
 <?
 if (!defined('PROGRAM_NAME')) die(); // Защита от прямого вызова скрипта
-$arTables = array 
+$arTables = array
 (
-	'bill_bills' => array 
+	'bill_bills' => array
 	(
 		'id' => 'int(11) NOT NULL AUTO_INCREMENT PRIMARY KEY', 
 		'number' => 'tinytext NOT NULL', 
@@ -12,18 +12,25 @@ $arTables = array
 		'timestamp' => 'tinytext NOT NULL',
 		'table_rows' => array (),
 	),
-	'intentions' => array 
+	'intentions' => array
 	(
 		'id' => 'int(11) NOT NULL AUTO_INCREMENT PRIMARY KEY', 
 		'goal' => 'tinytext NOT NULL', 
 		'pubkey' => 'tinytext NOT NULL', 
 		'intention' => 'tinytext NOT NULL', 
 	),
-	'transactions_pool' => array 
+	'contracts' => array
 	(
 		'id' => 'int(11) NOT NULL AUTO_INCREMENT PRIMARY KEY', 
-		'bill_number' => 'tinytext NOT NULL', 
-		'content' => 'text NOT NULL', 
+		'contract_number' => 'tinytext NOT NULL', 
+		'entity' => 'tinytext NOT NULL', 
+	),
+	'transactions_pool' => array
+	(
+		'id' => 'int(11) NOT NULL AUTO_INCREMENT PRIMARY KEY', 
+		'number' => 'tinytext NOT NULL', 
+		'type' => 'tinytext NOT NULL', 
+		'entity' => 'text NOT NULL', 
 	),
 );
 

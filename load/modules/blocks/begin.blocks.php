@@ -4,7 +4,7 @@ if (!defined('PROGRAM_NAME')) die(); // Защита от прямого выз�
 // Загрузка параметров модуля
 module_config (__DIR__);
 
-class cBlocks 
+class cBlocks
 {
 	public $id;
 	public $head = array();
@@ -289,9 +289,9 @@ class cBlocks
 				console_line('Время блока еще не пришло. Указан таймштамп будущего времени.', 3);
 				$wrong_items = true;
 			}
-			if ($this->head['parameters']['t']<=$this->previous->head['parameters']['t']+MIN_TIME) 
+			if ($this->head['parameters']['t']!=($this->previous->head['parameters']['t']+BLOCK_TIME)) 
 			{
-				console_line('Слишком быстро сформирован блок с момента формирования прошлого блока.', 3);
+				console_line('Таймштамп блока указан неверно.', 3);
 				$wrong_items = true;
 			}
 			// Если не найдено ни одной ошибки

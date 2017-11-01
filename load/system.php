@@ -37,7 +37,7 @@ else
 // Набор системных функций
 //*******************************
 // Запись строки в консоль
-function console_line ($txt, $show_level = 0, $line_type = 'ok') 
+function console_line ($txt, $show_level = 0, $line_type = 'ok')
 {
 	global $console;
 	if ($show_level >= CONSOLE_LEVEL) 
@@ -67,10 +67,57 @@ function console_line ($txt, $show_level = 0, $line_type = 'ok')
 	}
 }
 
-// Генерация случайной абракадабры
-function abra ($length = 10) 
+// Задание алфавита
+function alphabet ($lang = 'english')
 {
-	$alphabet = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+	$output = '';
+	switch ($lang) 
+	{
+		case 'english':
+			$output = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+			break;
+		case 'letters':
+			$output = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz';
+			break;
+		case 'symbols':
+			$output = '.,:;?!&%$^~+-*_=(){}[]';
+			break;
+		case 'hex':
+			$output = '0123456789abcdef';
+			break;
+		case 'digits':
+			$output = '0123456789';
+			break;
+		case 'full':
+			$output = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789.,:;?!&%$^~+-*_=(){}[]';
+			break;
+		default:
+			$output = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+	}
+	return $output;
+}
+
+// Проверка написано ли слово выбранным алфавитом
+function is_alphabet ($input, $lang = 'english')
+{
+	$output = true;
+	if ((!empty($input))&&(is_string($input))) 
+	{
+		$pattern = alphabet($lang);
+		$arInput = str_split($input, 1);
+		foreach ($arInput as $iInput) if (!stristr($pattern, $iInput)) $output = false;
+	}
+	else 
+	{
+		$output = false;
+	}
+	return $output;
+}
+
+// Генерация случайной абракадабры
+function abra ($length = 10)
+{
+	$alphabet = alphabet('english');
 	$result = '';
 	$alphabet_length = strlen($alphabet)-1;
 	while (strlen($result) < $length) $result .= $alphabet[random_int(0, $alphabet_length)];
@@ -78,43 +125,43 @@ function abra ($length = 10)
 }
 
 // Замена неправильных для ОС слэшей/бэкслэшей на правильные
-function way ($txt) 
+function way ($txt)
 {
 	return str_replace (array('/', '\\'), DS, $txt);
 }
 
 // Безопасная загрузка файлов в шаблон
-function section ($element) 
+function section ($element)
 {
 	if (is_file($element)) require($element);
 }
 
 // Проверка является ли переменная таймштампом (для унификации проверки с is_string, is_array и т.д.)
-function is_timestamp ($timestamp) 
+function is_timestamp ($timestamp)
 {
 	return checkdate(date('m', $timestamp) ,date('d', $timestamp) ,date('Y', $timestamp));
 }
 
 // Перевод числового значения в номинал
-function to_cent ($input) 
+function to_cent ($input)
 {
 	return number_format($input, CENT_ACCURACY, '.', '');
 }
 
 // Проверка является ли переменная номиналом
-function is_denomination ($input) 
+function is_denomination ($input)
 {
 	if (is_numeric($input)) return (to_cent($input)===$input) ? true : false; else return false;
 }
 
 // Проверка является ли переменная целым числом независимо от типа
-function is_num ($input) 
+function is_num ($input)
 {
 	return ((is_numeric($input))&&(round($input)==$input)) ? true : false;
 }
 
 // Сравнение чисел с плавающей запятой с точностью до сатоши
-function float_equals ($float_a, $float_b, $accuracy = 10**(-CENT_ACCURACY)) 
+function float_equals ($float_a, $float_b, $accuracy = 10**(-CENT_ACCURACY))
 {
 	return (abs($float_a-$float_b)<$accuracy) ? true : false;
 }

@@ -1,7 +1,8 @@
 <?
 if (!defined('PROGRAM_NAME')) die(); // Защита от прямого вызова скрипта
 
-if (defined('INSTALLED')) {
+if (defined('INSTALLED')) 
+{
 	$modules = new cModules;
 	foreach ($modules->list_enabled as $item) 
 	{
@@ -21,13 +22,13 @@ if (defined('INSTALLED')) {
 // if ($modules->is_enabled('blocks')) console_line('enabled', 100, 'array'); else  console_line('disabled', 100, 'array');
 // if ($modules->is_enabled('Blocks', true)) console_line('enabled', 100, 'array'); else  console_line('disabled', 100, 'array');
 
-class cModules 
+class cModules
 {
 	public $list_full = array();
 	public $list_enabled = array();
 	private $folder = SCRIPTS.'modules'.DS;
 	// Инициализация класса модулей
-	public function cModules () 
+	public function cModules ()
 	{
 		$this->list_full = array();
 		$this->list_enabled = array();
@@ -54,7 +55,7 @@ class cModules
 					{
 						$module_info['enabled'] = true;
 					}
-					else
+					else 
 					{
 						$module_info['enabled'] = false;
 					}
@@ -75,7 +76,7 @@ class cModules
 	}
 	
 	// Проверка установлен ли модуль (по id или по названию)
-	public function is_enabled ($module, $test_by_name = false) 
+	public function is_enabled ($module, $test_by_name = false)
 	{
 		$output = false;
 		$arModules = $this->list_enabled;
@@ -103,21 +104,21 @@ function sort_modules($item_a, $item_b)
 }
 
 // Установка модуля
-function module_config ($module_dir) 
+function module_config ($module_dir)
 {
 	$config_file = way($module_dir.DS.'module.config.php');
 	$install_file = way($module_dir.DS.'module.install.php');
 	$functions_file = way($module_dir.DS.'module.functions.php');
 	$addons_dir = way($module_dir.DS.'addons');
-	if (is_dir($addons_dir)) 
-	{
-		$arAddons = scandir($addons_dir);
-		foreach ($arAddons as $key => $iAddons) if (is_file(way($addons_dir.DS.$iAddons))) require_once(way($addons_dir.DS.$iAddons));
-	}
 	if (is_file($config_file)) 
 	{
 		require_once($config_file);
 		if (is_file($functions_file)) require_once($functions_file);
+		if (is_dir($addons_dir)) 
+		{
+			$arAddons = scandir($addons_dir);
+			foreach ($arAddons as $key => $iAddons) if (is_file(way($addons_dir.DS.$iAddons))) require_once(way($addons_dir.DS.$iAddons));
+		}
 		return true;
 	}
 	else 

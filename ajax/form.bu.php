@@ -73,8 +73,6 @@ else
 		<div class="form-field select-field algo-field requires">
 			<select name="algo">
 				<option disabled>Алгоритм</option>
-				<option value="s">Simple</option>
-				<option value="t">Twice</option>
 				<option selected value="ar">Anti-rainbow</option>
 			</select>
 		</div>

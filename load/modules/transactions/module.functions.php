@@ -4,7 +4,7 @@ if (!defined('PROGRAM_NAME')) die(); // Защита от прямого выз�
 // Функции работы с транзакциями.
 //*******************************
 // Сортировка транзакций по типам и номерам первых банкнот при чтении блока
-function transaction_sort ($input) 
+function transaction_sort ($input)
 {
 	$output = array();
 	if ((is_array($input))&&(!empty($input))) 
@@ -22,7 +22,7 @@ function transaction_sort ($input)
 	return $output;
 }
 // Извлечение статистической информации о транзакции или о намерении
-function transaction_test ($transaction_name, $input) 
+function transaction_test ($transaction_name, $input)
 {
 	$transaction = new cTransactions;
 	$intention = new cIntention;
@@ -32,6 +32,16 @@ function transaction_test ($transaction_name, $input)
 	$result['fee'] = 0;
 	switch ($transaction_name) 
 	{
+		case 'bgi':
+			$result['is_ok'] = $intention->bill_group_intention ($input[0], false);
+			$result['denomination'] = to_cent(0);
+			foreach ($input[0] as $item) 
+			{
+				$arTemp = (new cBase)->bill_get_row($item['n']);
+				$result['denomination'] += to_cent($arTemp['denomination']);
+				array_push($result['number'], $arTemp['number']);
+			}
+			break;
 		case 'bai':
 			$result['is_ok'] = $intention->bill_add_intention ($input[0], $input[1], $input[2], false);
 			$arTemp = (new cBase)->bill_get_row($input[0]);
@@ -106,7 +116,7 @@ function transaction_code ($identifier, $arInput, $example = array())
 function sort_transactions ($item_a, $item_b)
 {
 	$result = strnatcmp($item_a['key'],$item_b['key']);
-	if (!$result)
+	if (!$result) 
 	{
 		if ((is_array($item_a['parameters']))&&(is_array($item_b['parameters']))) 
 		{
@@ -126,7 +136,7 @@ function sort_transactions ($item_a, $item_b)
 			}
 		}
 	}
-	if (!$result)
+	if (!$result) 
 	{
 		if ((is_array($item_a['parameters']))&&(is_array($item_b['parameters']))) 
 		{

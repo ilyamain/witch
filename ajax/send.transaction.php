@@ -10,20 +10,23 @@ if ($modules->is_enabled('transactions'))
 	{
 		$newpassword = (DEMO) ? $_POST['p']['newnumber'] : $_POST['p']['newpass']; // В демоверсии все пароли равны номерам банкнот
 		$newdenom = (DEMO) ? '40.55000000' : $_POST['p']['newdenom']; // В демоверсии эмитируемые банкноты одного номинала
-		$bill_example = array(
+		$bill_example = array
+		(
 			'number' => $_POST['p']['newnumber'],
 			'key' => $newpassword,
 			'algorithm' => $_POST['p']['algo'],
 			'denomination' => to_cent($newdenom),
 			'timestamp' => $_POST['p']['notime'] ? 0 : gmdate('U'),
+//			'entity' => $transaction_json,  // транзакции в этом разделе упрощены, сущность для алгоритмов шифрования не требуется
 		);
 		$encrypt = new cEncrypt($bill_example);
-		if ($encrypt->algorithm) {
+		if ($encrypt->algorithm) 
+		{
 			$bill_example['sign'] = $encrypt->sign;
 			$new_bill = new cIssue($bill_example);
 			$new_bill->create(true);
 		}
-		else
+		else 
 		{
 			console_line('Неправильно указан алгоритм шифрования.', 2, 'error');
 		}
@@ -41,6 +44,7 @@ if ($modules->is_enabled('transactions'))
 				'algorithm' => $_POST['p']['algo'], 
 				'denomination' => to_cent($bill['denomination']),
 				'timestamp' => $_POST['p']['notime'] ? 0 : gmdate('U'),
+//				'entity' => $transaction_json,  // транзакции в этом разделе упрощены, сущность для алгоритмов шифрования не требуется
 			);
 			$encrypt = new cEncrypt($bill_example);
 			$bill_example['sign'] = $encrypt->sign;
@@ -57,12 +61,12 @@ if ($modules->is_enabled('transactions'))
 					true
 				);
 			}
-			else
+			else 
 			{
 				console_line('Неправильно указан алгоритм шифрования.', 2, 'error');
 			}
 		}
-		else
+		else 
 		{
 			console_line('Данные указаны неверно.', 2, 'error');
 		}
@@ -81,6 +85,7 @@ if ($modules->is_enabled('transactions'))
 				'algorithm' => $_POST['p']['algo'], 
 				'denomination' => to_cent($bill1['denomination']+$bill2['denomination']),
 				'timestamp' => $_POST['p']['notime'] ? 0 : gmdate('U'),
+//				'entity' => $transaction_json,  // транзакции в этом разделе упрощены, сущность для алгоритмов шифрования не требуется
 			);
 			$encrypt = new cEncrypt($bill_example);
 			$bill_example['sign'] = $encrypt->sign;
@@ -106,12 +111,12 @@ if ($modules->is_enabled('transactions'))
 					true
 				);
 			}
-			else
+			else 
 			{
 				console_line('Неправильно указан алгоритм шифрования.', 2, 'error');
 			}
 		}
-		else
+		else 
 		{
 			console_line('Данные указаны неверно.', 2, 'error');
 		}
@@ -131,6 +136,7 @@ if ($modules->is_enabled('transactions'))
 					'algorithm' => $_POST['p']['algo'], 
 					'denomination' => to_cent($_POST['p']['newdenom-01']),
 					'timestamp' => $_POST['p']['notime'] ? 0 : gmdate('U'),
+//					'entity' => $transaction_json,  // транзакции в этом разделе упрощены, сущность для алгоритмов шифрования не требуется
 				],
 				[
 					'number' => $_POST['p']['newnumber-02'], 
@@ -138,6 +144,7 @@ if ($modules->is_enabled('transactions'))
 					'algorithm' => $_POST['p']['algo'], 
 					'denomination' => to_cent($_POST['p']['newdenom-02']),
 					'timestamp' => $_POST['p']['notime'] ? 0 : gmdate('U'),
+//					'entity' => $transaction_json,  // транзакции в этом разделе упрощены, сущность для алгоритмов шифрования не требуется
 				],
 			);
 			$encrypt = array
@@ -172,12 +179,12 @@ if ($modules->is_enabled('transactions'))
 					true
 				);
 			}
-			else
+			else 
 			{
 				console_line('Неправильно указан алгоритм шифрования.', 2, 'error');
 			}
 		}
-		else
+		else 
 		{
 			console_line('Данные указаны неверно.', 2, 'error');
 		}
@@ -198,6 +205,7 @@ if ($modules->is_enabled('transactions'))
 					'algorithm' => $_POST['p']['algo'], 
 					'denomination' => to_cent($_POST['p']['newdenom-01']),
 					'timestamp' => $_POST['p']['notime'] ? 0 : gmdate('U'),
+//					'entity' => $transaction_json,  // транзакции в этом разделе упрощены, сущность для алгоритмов шифрования не требуется
 				],
 				[
 					'number' => $_POST['p']['newnumber-02'], 
@@ -205,6 +213,7 @@ if ($modules->is_enabled('transactions'))
 					'algorithm' => $_POST['p']['algo'], 
 					'denomination' => to_cent($_POST['p']['newdenom-02']),
 					'timestamp' => $_POST['p']['notime'] ? 0 : gmdate('U'),
+//					'entity' => $transaction_json,  // транзакции в этом разделе упрощены, сущность для алгоритмов шифрования не требуется
 				],
 			);
 			$encrypt = array
@@ -247,12 +256,12 @@ if ($modules->is_enabled('transactions'))
 					true
 				);
 			}
-			else
+			else 
 			{
 				console_line('Неправильно указан алгоритм шифрования.', 2, 'error');
 			}
 		}
-		else
+		else 
 		{
 			console_line('Данные указаны неверно.', 2, 'error');
 		}
