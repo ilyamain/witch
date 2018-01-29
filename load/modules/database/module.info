@@ -1,0 +1,8 @@
+name			= Database
+description		= Database-handling.
+version			= 0.6
+state			= beta
+initfile		= db.php
+date			= 20180103
+author			= Witch
+weight			= 200

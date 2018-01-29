@@ -1,0 +1,8 @@
+name			= Blocks
+description		= Control blocks in chain.
+version			= 0.6
+state			= beta
+initfile		= begin.blocks.php
+date			= 20180103
+author			= Witch
+weight			= 1000

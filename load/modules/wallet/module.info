@@ -1,0 +1,8 @@
+name			= Wallet
+description		= Wallet controllers.
+version			= 0.6
+state			= beta
+initfile		= wallet.php
+date			= 20180103
+author			= Witch
+weight			= 2000

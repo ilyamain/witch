@@ -1,0 +1,8 @@
+name			= Connect
+description		= Connections controllers.
+version			= 0.4
+state			= alpha
+initfile		= begin.connect.php
+date			= 20180103
+author			= Witch
+weight			= 1100
