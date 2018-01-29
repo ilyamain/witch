@@ -1,0 +1,809 @@
+/*Анимация*/
+@-webkit-keyframes blink {
+    0% {opacity: 1;}
+    50% {opacity: 0;}
+    100% {opacity: 1;}
+}
+@keyframes blink {
+    0% {opacity: 1;}
+    50% {opacity: 0;}
+    100% {opacity: 1;}
+}
+@-webkit-keyframes bg-blink {
+    0% {background-color: #a5a5a5;}
+    25% {background-color: #a5ffa5;}
+    50% {background-color: #ffffff;}
+    100% {background-color: #a5a5a5;}
+}
+@keyframes bg-blink {
+    0% {background-color: #a5a5a5;}
+    25% {background-color: #a5ffa5;}
+    50% {background-color: #ffffff;}
+    100% {background-color: #a5a5a5;}
+}
+
+
+/*Общие элементы*/
+body {
+    margin: 0px;
+    font-family: arial;
+}
+h1 {
+    margin: 10px 0px;
+    text-align: center;
+    font-size: 22px;
+}
+h2 {
+    margin: 5px 0px;
+    text-align: center;
+    font-size: 18px;
+}
+a {
+    text-decoration: none;
+    color: #18a518;
+    cursor: pointer;
+}
+pre {
+    margin: 10px;
+    padding: 10px;
+    background: #ffedf2;
+    border: 1px solid #c39ea9;
+}
+input, select, textarea {
+    font-family: monospace;
+}
+:focus {
+    outline: none;
+}
+.file-field {
+    display: none;
+}
+
+
+/*Таблицы*/
+table {
+    width: 100%;
+    margin: 0px auto;
+    border-collapse: collapse;
+    font-family: monospace;
+}
+tr:nth-child(1) {
+    background-color: #a5a5a5;
+    color: #ffffff;
+}
+td {
+    padding: 2px;
+    border: 1px solid #a5a5a5;
+    text-align: center;
+    word-break: break-all;
+}
+td.right-text {
+    text-align: right;
+}
+td.left-text {
+    text-align: left;
+}
+td.word-text {
+    word-break: break-word;
+}
+
+
+#background {
+    position: fixed;
+    top: 0px;
+    left: 0px;
+    width: 100%;
+    height: 100%;
+    -webkit-animation: bg-blink 30s linear infinite;
+    animation: bg-blink 30s linear infinite;
+}
+
+
+/*Собственно сайт*/
+.site {
+    position: relative;
+    background-color: rgba(255, 255, 255, 0.6);
+}
+.site.covered {
+    -webkit-filter: blur(3px);
+    -moz-filter: blur(3px);
+    filter: blur(3px);
+    filter: progid:DXImageTransform.Microsoft.Blur(pixelRadius=3);
+    opacity: 0.2;
+}
+
+
+/*Верхнее меню*/
+.top {
+    width: 100%;
+    min-height: 30px;
+    line-height: 30px;
+    text-align: center;
+    background-color: #ffffff;
+    border-bottom: 3px double #a5a5a5;
+}
+.top a {
+    display: inline-block;
+    margin: 0px 10px;
+    padding: 0px 0px 0px 30px;
+    background-size: 20px;
+    background-repeat: no-repeat;
+    background-position: 6px 50%;
+}
+
+
+/*Основная часть*/
+.wrapper {
+    width: 1200px;
+    min-height: 100vh;
+    margin: 0px auto;
+    background-color: rgba(255, 255, 255, 0.6);
+}
+
+
+/*Левое меню*/
+.left {
+    display: inline-block;
+    width: 250px;
+    vertical-align: top;
+}
+.selector {
+    margin: 0px 10px;
+    padding: 0px;
+    border: none;
+}
+.selector input {
+    display: none;
+}
+.selector label {
+    position: relative;
+    display: block;
+    padding: 2px 5px 2px 25px;
+    margin: 2px 0px;
+    cursor: pointer;
+}
+.selector label:hover {
+    text-decoration: underline;
+}
+.selector label:before {
+    content: " ";
+    position: absolute;
+    top: 0px;
+    left: 0px;
+    width: 20px;
+    height: 20px;
+    background-image: url(/files/images/flags.png);
+    background-size: 100% auto;
+    background-position: 0% 30%;
+}
+.selector label:hover:before {
+    background-position: 0% 20%;
+}
+.selector input:checked + label {
+    color: #18a518;
+}
+.selector input:checked + label:before {
+    background-position: 0% 60%;
+}
+
+
+/*Информационная часть*/
+.main {
+    width: 910px;
+    display: inline-block;
+    padding: 10px;
+    vertical-align: top;
+}
+
+
+/*Консоль сообщений*/
+.console {
+    margin: 10px 0px;
+    padding: 10px;
+    font-family: monospace;
+}
+.console-header {
+    text-align: center;
+    font-size: 20px;
+    font-weight: bold;
+}
+#console {
+    height: 50px;
+    margin: 0px 0px 10px 0px;
+    padding: 10px;
+    border: 3px solid rgba(255, 255, 255, 0.5);
+    background-color: rgba(255, 255, 255, 0.3);
+    overflow-x: hidden;
+    overflow-y: scroll;
+}
+.page-mainpage #console, .page-install #console, .page-miner #console {
+    height: 500px;
+}
+.console-line {
+    white-space: pre;
+}
+.console-line.invisible-line {
+    display: none;
+}
+.console-line.success-line {
+    color: #18a518;
+}
+.console-line.error-line {
+    color: #a51818;
+}
+.console-line.array-line {
+    color: #a518a5;
+}
+.console-line.attract-line {
+    color: #a5a518;
+}
+#console .console-line:nth-child(1):after {
+    content: " ";
+    display: inline-block;
+    width: 5px;
+    margin-left: 5px;
+    background-color: #18a518;
+    -webkit-animation: blink 2s linear infinite;
+    animation: blink 2s linear infinite;
+}
+#console .console-line {
+    border-left: 5px solid;
+    padding-left: 5px;
+}
+
+
+/*Подвал сайта*/
+#footer {
+    width: 100%;
+    height: 100px;
+    padding: 20px 20px 20px 150px;
+    box-sizing: border-box;
+    border-top: 3px double #a5a5a5;
+    text-align: center;
+    background-color: #ffffff;
+    background-image: url(/files/images/witch.jpg);
+    background-size: 100px;
+    background-repeat: no-repeat;
+    background-position: 0px 0px;
+}
+
+
+/*Numerata Wallet*/
+.numerata-image {
+    height: 40px;
+    line-height: 40px;
+    margin: 10px 0px;
+    padding: 0px 50px;
+    text-align: left;
+    background-image: url(/files/images/numerata.png);
+    background-size: 40px;
+    background-position: 5px 0px;
+    background-repeat: no-repeat;
+}
+.wallet-bill-item {
+    position: relative;
+    display: inline-block;
+    width: 200px;
+    height: 120px;
+    border: 3px solid #a5a5a5;
+    background-size: 100%;
+    background-repeat: no-repeat;
+    background-position: 50% 50%;
+    overflow: hidden;
+}
+.bill-bg-10000 {
+    background-image: url(/files/images/bill/10000.jpg);
+}
+.bill-bg-5000 {
+    background-image: url(/files/images/bill/5000.jpg);
+}
+.bill-bg-1000 {
+    background-image: url(/files/images/bill/1000.jpg);
+}
+.bill-bg-500 {
+    background-image: url(/files/images/bill/500.jpg);
+}
+.bill-bg-100 {
+    background-image: url(/files/images/bill/100.jpg);
+}
+.bill-bg-50 {
+    background-image: url(/files/images/bill/50.jpg);
+}
+.bill-bg-10 {
+    background-image: url(/files/images/bill/10.jpg);
+}
+.bill-bg-5 {
+    background-image: url(/files/images/bill/5.jpg);
+}
+.bill-bg-1 {
+    background-image: url(/files/images/bill/1.jpg);
+}
+.bill-bg-cent {
+    background-image: url(/files/images/bill/cent.jpg);
+}
+.bill-bg-empty {
+    background-image: url(/files/images/bill/empty.jpg);
+}
+.wallet-bill-cover {
+    position: absolute;
+    left: 0px;
+    right: 0px;
+    top: 0px;
+    bottom: 0px;
+    background-color: rgba(255, 255, 255, 0);
+    z-index: 9;
+}
+.wallet-bill-item:hover .wallet-bill-cover {
+    background-color: rgba(255, 255, 255, 0.8);
+}
+.wallet-bill-caption {
+    position: absolute;
+    height: 30px;
+    line-height: 30px;
+    text-align: center;
+    color: #ffffff;
+    background-color: rgba(165, 165, 165, 0.7);
+    z-index: 10;
+}
+.wallet-bill-caption.bill-number {
+    top: 0px;
+    left: 0px;
+    right: 0px;
+}
+.wallet-bill-caption.bill-denomination {
+    bottom: 0px;
+    right: 0px;
+    padding: 0px 10px 0px 30px;
+    border-radius: 30px 0px 0px 0px;
+}
+.wallet-bill-caption.bill-key {
+    display: none;
+}
+.wallet-bill-item.bill-busy-1 {
+    border-color: #a5a518;
+}
+.wallet-bill-item.bill-busy-1 .wallet-bill-caption {
+    color: #a5a518;
+    background-color: rgba(255, 255, 255, 0.7);
+}
+.wallet-bill-item.bill-busy-2 {
+    border-color: #a51818;
+}
+.wallet-bill-item.bill-busy-2 .wallet-bill-caption {
+    color: #a51818;
+    background-color: rgba(255, 255, 255, 0.7);
+}
+.wallet-bill-actions {
+    position: absolute;
+    top: 50%;
+    left: 0px;
+    right: 0px;
+    height: 30px;
+    margin-top: -15px;
+    text-align: center;
+    overflow: hidden;
+    opacity: 0;
+    transition: 0.4s all;
+    z-index: 10;
+}
+.wallet-bill-item:hover .wallet-bill-actions {
+    opacity: 1;
+}
+.wallet-bill-actions a {
+    display: inline-block;
+    width: 30px;
+    height: 30px;
+    vertical-align: top;
+    background-size: 26px;
+    background-repeat: no-repeat;
+    background-position: 50% 50%;
+}
+.wallet-bill-item .icon-del {
+    display: none;
+}
+.wallet-bill-item.input-added {
+    border-color: #ffffff;
+}
+.wallet-bill-item.input-added .wallet-bill-caption {
+    color: #a5a5a5;
+    background-color: rgba(255, 255, 255, 0.7);
+}
+.wallet-bill-item.input-added .wallet-bill-cover {
+    background-color: rgba(255, 255, 255, 0.8);
+}
+.wallet-bill-item.input-added .icon-add {
+    display: none;
+}
+.wallet-bill-item.input-added .icon-del {
+    display: inline-block;
+}
+.bill-details {
+    padding-bottom: 10px;
+    text-align: center;
+}
+.bill-image {
+    display: inline-block;
+    width: 300px;
+    height: 180px;
+    vertical-align: top;
+    background-size: 100%;
+    background-repeat: no-repeat;
+    background-position: 50% 50%;
+}
+.bill-description {
+    display: inline-block;
+    width: 600px;
+    vertical-align: top;
+    font-size: 14px;
+    text-align: left;
+}
+.bill-item {
+    margin-top: 10px;
+    border-bottom: 1px dashed #a5a5a5;
+}
+.bill-attr-name {
+    font-weight: bold;
+}
+.bill-actions {
+    margin: 10px 0px;
+    text-align: center;
+}
+.form-header {
+    padding: 5px 10px;
+    font-weight: bold;
+}
+.form-total {
+    padding: 5px 10px;
+    text-align: right;
+    border-top: 1px dashed #a5a5a5;
+}
+.wallet-bill-upload {
+    display: block;
+    height: 50px;
+    line-height: 50px;
+    margin: 10px 0px;
+    border: 1px solid #a5a5a5;
+    text-align: center;
+    color: #a5a5a5;
+    transition: 0.4s all;
+}
+.wallet-bill-upload:hover {
+    border: 1px solid #ffffff;
+    background-color: #a5a5a5;
+    color: #ffffff;
+}
+.wallet-bill-upload span {
+    display: block;
+    cursor: pointer;
+}
+.input-bills {
+    display: none;
+    padding: 5px;
+}
+.show-input .input-bills {
+    display: block;
+}
+.bill-input-list {
+    border: 1px solid #a5a5a5;
+}
+.bill-input-list .bill-key, .bill-input-list .bill-pubkey {
+    display: none;
+}
+.bill-input-list .bill-input-item {
+    height: 25px;
+    line-height: 25px;
+    padding: 5px 5px 5px 35px;
+    color: #a5a5a5;
+    background-image: url(/files/images/icons/ok.png);
+    background-size: 26px;
+    background-repeat: no-repeat;
+    background-position: 5px 50%;
+}
+
+
+/*Форма отправки транзакций*/
+.form-bg {
+    position: fixed;
+    top: 0px;
+    bottom: 0px;
+    left: 0px;
+    right: 0px;
+    display: none;
+    cursor: pointer;
+    background-color: rgba(255, 255, 255, 0.7);
+    z-index: 110;
+}
+.form {
+    position: fixed;
+    top: auto;
+    bottom: -100%;
+    left: auto;
+    right: -100%;
+    width: 0%;
+    height: 0%;
+    margin: auto;
+    border: 3px double #a5a5a5;
+    background-color: rgba(255, 255, 255, 0.7);
+    background-repeat: no-repeat;
+    background-size: 100px;
+    background-position: 50% 50%;
+    overflow-x: hidden;
+    overflow-y: scroll;
+    -webkit-transition: 0.4s all;
+    -moz-transition: 0.4s all;
+    transition: 0.4s all;
+}
+.form.active {
+    top: 0px;
+    bottom: 0px;
+    left: 0px;
+    right: 0px;
+    width: 1000px;
+    height: 85%;
+    padding: 20px;
+    z-index: 111;
+}
+.form.loading {
+    background-image: url(/files/images/loading.gif);
+}
+.form-row {
+    padding: 5px 0px;
+}
+.form-row-underline {
+    border-bottom: 1px solid #a5a5a5;
+}
+.form-row-center {
+    text-align: center;
+}
+.form-row-width .form-field {
+    display: block;
+    margin: 0px;
+}
+.form-row-width .form-field input {
+    width: 100%;
+}
+.form-row-width .button {
+    display: block;
+}
+.form-row-float-right {
+    float: right;
+}
+.form-field {
+    display: inline-block;
+    margin: 0px 5px;
+}
+.form-field .button {
+    margin: 0px;
+}
+.input-field input, .form-field select {
+    width: 150px;
+    height: 30px;
+    line-height: 30px;
+    padding: 5px 10px 5px 30px;
+    border: 1px solid #a5a5a5;
+    background-repeat: no-repeat;
+    background-size: 20px;
+    background-position: 6px 50%;
+}
+.input-field.unfilled input, .form-field.unfilled select {
+    border-color: #a51818;
+}
+.form-error {
+    display: none;
+    margin: 5px 0px;
+    padding: 5px 10px;
+    text-align: center;
+    color: #ffffff;
+    background-color: #a51818;
+}
+.form-error.active {
+    display: block;
+}
+
+
+/*Форма установки CMS*/
+.form-sides {
+    display: table;
+    width: 100%;
+}
+.form-sides .console-line {
+    white-space: normal;
+}
+.form-left, .form-right {
+    display: table-cell;
+    width: 50%;
+}
+.form .console-line {
+    position: relative;
+    line-height: 30px;
+    padding-left: 30px;
+}
+.form .console-line:before {
+    content: " ";
+    position: absolute;
+    top: 5px;
+    left: 5px;
+    width: 20px;
+    height: 20px;
+    background-image: url(/files/images/flags.png);
+    background-size: auto 1100%;
+    background-position: 0px 0px;
+}
+.form .console-line.success-line:before {
+    background-position: 0px -120px;
+}
+.form .console-line.error-line:before {
+    background-position: 0px -160px;
+}
+.form .console-line.array-line:before {
+    background-position: 0px -180px;
+}
+.form .console-line.attract-line:before {
+    background-position: 0px -200px;
+}
+
+/*Кнопки*/
+.button {
+    position: relative;
+    display: inline-block;
+    height: 30px;
+    line-height: 30px;
+    margin: 0px 10px;
+    padding: 0px 10px 0px 30px;
+    vertical-align: top;
+    background-size: 20px;
+    background-repeat: no-repeat;
+    background-position: 6px 50%;
+}
+.button:before {
+    content: " ";
+    position: absolute;
+    top: 0px;
+    left: 0px;
+    width: 5px;
+    height: 100%;
+    border-top: 1px solid #a5a5a5;
+    border-left: 1px solid #a5a5a5;
+    border-bottom: 1px solid #a5a5a5;
+    box-sizing: border-box;
+    transition: 0.4s all;
+}
+.button:hover:before {
+    width: 100%;
+}
+.button:after {
+    content: " ";
+    position: absolute;
+    bottom: 0px;
+    right: 0px;
+    width: 5px;
+    height: 100%;
+    border-right: 1px solid #a5a5a5;
+    border-top: 1px solid #a5a5a5;
+    border-bottom: 1px solid #a5a5a5;
+    box-sizing: border-box;
+    transition: 0.4s all;
+}
+.button:hover:after {
+    width: 100%;
+}
+.little-button {
+    display: inline-block;
+    width: 30px;
+    height: 30px;
+    vertical-align: top;
+    background-size: 20px;
+    background-repeat: no-repeat;
+    background-position: 50% 50%;
+}
+.icon-mainpage {
+    background-image: url(/files/images/icons/mainpage.png);
+}
+.icon-wallet {
+    background-image: url(/files/images/icons/wallet.png);
+}
+.icon-install {
+    background-image: url(/files/images/icons/install.png);
+}
+.icon-uninstall {
+    background-image: url(/files/images/icons/uninstall.png);
+}
+.icon-pass {
+    background-image: url(/files/images/icons/pass.png);
+}
+.icon-user {
+    background-image: url(/files/images/icons/user.png);
+}
+.icon-database {
+    background-image: url(/files/images/icons/database.png);
+}
+.icon-server {
+    background-image: url(/files/images/icons/server.png);
+}
+.icon-ok {
+    background-image: url(/files/images/icons/ok.png);
+}
+.icon-return {
+    background-image: url(/files/images/icons/return.png);
+}
+.icon-download {
+    background-image: url(/files/images/icons/download.png);
+}
+.icon-info {
+    background-image: url(/files/images/icons/info.png);
+}
+.icon-close {
+    background-image: url(/files/images/icons/close.png);
+}
+.icon-add {
+    background-image: url(/files/images/icons/add.png);
+}
+.icon-del {
+    background-image: url(/files/images/icons/del.png);
+}
+.icon-edit {
+    background-image: url(/files/images/icons/edit.png);
+}
+.icon-abra {
+    background-image: url(/files/images/icons/abra.png);
+}
+.icon-bco {
+    background-image: url(/files/images/icons/bco.png);
+}
+.icon-bu {
+    background-image: url(/files/images/icons/bu.png);
+}
+.icon-bs {
+    background-image: url(/files/images/icons/bs.png);
+}
+.icon-br {
+    background-image: url(/files/images/icons/br.png);
+}
+.icon-number {
+    background-image: url(/files/images/icons/number.png);
+}
+.icon-sign {
+    background-image: url(/files/images/icons/sign.png);
+}
+.icon-fee {
+    background-image: url(/files/images/icons/fee.png);
+}
+.icon-denomination {
+    background-image: url(/files/images/icons/denomination.png);
+}
+
+
+/*Страница администрирование*/
+.constant-field {
+    min-height: 30px;
+    line-height: 30px;
+    margin: 0px;
+    padding: 2px 5px;
+    border-left: 5px solid #a5a5a5;
+    border-bottom: 1px solid #a5a5a5;
+    color: #a5a5a5;
+}
+.constant-field span {
+    display: inline-block;
+}
+.module-row {
+    min-height: 50px;
+    margin: 0px;
+    padding: 5px 10px;
+    border-left: 5px solid;
+    border-bottom: 1px solid;
+    clear: both;
+}
+.module-row.install-disable {
+    color: #a5a5a5;
+    border-color: #a5a5a5;
+}
+.module-weight {
+    display: inline-block;
+    width: 50px;
+    vertical-align: top;
+}
+.module-name {
+    display: inline-block;
+    vertical-align: top;
+}
