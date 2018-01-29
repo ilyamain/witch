@@ -1,8 +1,0 @@
-name			= Pages
-description		= Pages-handling.
-version			= 0.5
-state			= beta
-initfile		= page.php
-date			= 20170730
-author			= Witch
-weight			= 300
